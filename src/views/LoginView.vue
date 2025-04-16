@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { useRouter } from 'vue-router'
@@ -33,18 +33,17 @@ const password = ref('')
 const error = ref(null)
 const router = useRouter()
 
-const {
-  result,
-  loading,
-  error: queryError,
-  refetch,
-} = useQuery(LOGIN_QUERY, {
+const variables = computed(() => ({
   email: email.value,
   password: password.value,
-})
+}))
+
+const { result, loading, error: queryError, refetch } = useQuery(LOGIN_QUERY, variables)
 
 const handleLogin = async () => {
   error.value = null
+  console.log('Email:', email.value)
+  console.log('Password:', password.value)
   try {
     await refetch()
     const token = result.value?.login
