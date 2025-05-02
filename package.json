@@ -17,9 +17,11 @@
   "dependencies": {
     "@apollo/client": "^3.13.7",
     "@vue/apollo-composable": "^4.2.2",
+    "axios": "^1.8.4",
     "graphql": "^16.10.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
+    "vue-demi": "^0.14.10",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {

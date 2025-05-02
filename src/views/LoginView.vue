@@ -21,6 +21,7 @@ import { ref, computed } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
 const LOGIN_QUERY = gql`
   query Login($email: String!, $password: String!) {
@@ -32,6 +33,7 @@ const email = ref('')
 const password = ref('')
 const error = ref(null)
 const router = useRouter()
+const authStore = useAuthStore()
 
 const variables = computed(() => ({
   email: email.value,
@@ -48,7 +50,10 @@ const handleLogin = async () => {
     await refetch()
     const token = result.value?.login
     if (token) {
-      localStorage.setItem('jwt', token)
+      // Use the auth store to properly set the login state
+      authStore.login(token)
+      
+      // Redirect to home page
       router.push('/home')
     } else {
       throw new Error('Invalid credentials')

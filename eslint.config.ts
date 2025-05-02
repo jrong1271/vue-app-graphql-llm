@@ -20,15 +20,27 @@ export default defineConfigWithVueTs(
 
   pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
-  
+
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
   },
-  
+
   {
     ...pluginPlaywright.configs['flat/recommended'],
     files: ['e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'],
   },
   skipFormatting,
+
+  {
+    rules: {
+      'vue/component-tags-order': 'off', // Disable rule for lang tag in script
+    },
+  },
+
+  {
+    rules: {
+      'vue/block-lang': 'off', // Disable rule for block lang enforcement
+    },
+  },
 )

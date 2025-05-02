@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/graphql': {
-        target: 'http://localhost:4000',
+        target: 'https://0isr0jxbc8.execute-api.us-east-1.amazonaws.com/dev/',
         changeOrigin: true,
         secure: false,
       },
