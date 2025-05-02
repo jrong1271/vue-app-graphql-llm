@@ -17,15 +17,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useQuery } from '@vue/apollo-composable'
+import { ref } from 'vue'
+import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
-const LOGIN_QUERY = gql`
-  query Login($email: String!, $password: String!) {
-    login(email: $email, password: $password)
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        id
+        name
+        email
+      }
+    }
   }
 `
 
@@ -35,30 +42,31 @@ const error = ref(null)
 const router = useRouter()
 const authStore = useAuthStore()
 
-const variables = computed(() => ({
-  email: email.value,
-  password: password.value,
-}))
-
-const { result, loading, error: queryError, refetch } = useQuery(LOGIN_QUERY, variables)
+const { mutate: login, loading, error: mutationError } = useMutation(LOGIN_MUTATION)
 
 const handleLogin = async () => {
   error.value = null
   console.log('Email:', email.value)
   console.log('Password:', password.value)
+
   try {
-    await refetch()
-    const token = result.value?.login
+    const { data } = await login({
+      email: email.value,
+      password: password.value,
+    })
+
+    const token = data?.login
     if (token) {
       // Use the auth store to properly set the login state
       authStore.login(token)
-      
+
       // Redirect to home page
       router.push('/home')
     } else {
       throw new Error('Invalid credentials')
     }
-  } catch {
+  } catch (e) {
+    console.error('Login error:', e)
     error.value = 'Login failed. Please check your credentials.'
   }
 }
