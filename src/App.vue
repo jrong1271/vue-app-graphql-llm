@@ -14,8 +14,6 @@ import { RouterView } from 'vue-router'
 .content-container {
   padding: 20px;
   margin: 0 auto;
-  max-width: 900px;
-  text-align: center;
 }
 /* Add global styles here if needed */
 </style>
