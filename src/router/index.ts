@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import AIView from '../views/AIView.vue'
 import DemoView from '../views/DemoView.vue'
 import DemoView2 from '../views/DemoView2.vue'
+import TestView from '../views/TestView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
@@ -43,6 +44,12 @@ const router = createRouter({
       path: '/demo2',
       name: 'Demo2',
       component: DemoView2,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/test',
+      name: 'Test',
+      component: TestView,
       meta: { requiresAuth: true },
     },
   ],

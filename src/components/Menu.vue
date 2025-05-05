@@ -17,7 +17,7 @@ const logout = () => {
       <ul class="main-menu">
         <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/about">About</router-link></li>
-
+        <li><router-link to="/test">Test</router-link></li>
         <li class="dropdown">
           <router-link to="/demo">Demo</router-link>
           <ul class="dropdown-menu">
