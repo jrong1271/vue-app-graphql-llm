@@ -1,10 +1,10 @@
 <script setup>
-import Menu from './components/Menu.vue'
+import AppMenu from './components/AppMenu.vue'
 import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <Menu />
+  <AppMenu />
   <div class="content-container">
     <RouterView />
   </div>

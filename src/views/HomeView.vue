@@ -1,9 +1,45 @@
-<script setup lang="ts"></script>
-
+<!-- filepath: /Users/joe/dev/vue/finance/src/views/HomeView.vue -->
 <template>
-  <div class="home-container">
-    <h1>Welcome</h1>
+  <div class="home">
+    <h1>My Vue App</h1>
+
+    <section>
+      <h2>API Configuration</h2>
+      <p>
+        This application can connect to either a remote GraphQL API or a local development server.
+      </p>
+    </section>
   </div>
 </template>
 
-<style scoped></style>
+<script setup>
+// No additional logic is needed for this static page
+</script>
+
+<style scoped>
+.home {
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  color: #333;
+}
+
+code {
+  background-color: #f4f4f4;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+pre {
+  background-color: #f4f4f4;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+</style>

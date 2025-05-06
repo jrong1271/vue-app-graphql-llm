@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import AIView from '../views/AIView.vue'
-import DemoView from '../views/DemoView.vue'
-import DemoView2 from '../views/DemoView2.vue'
+import CalculatorView from '../views/CalculatorView.vue'
+import DataTableView from '../views/DataTableView.vue'
 import TestView from '../views/TestView.vue'
 import { useAuthStore } from '../stores/auth'
 
@@ -14,11 +14,10 @@ const router = createRouter({
       path: '/',
       name: 'Root',
       redirect: '/home',
-      meta: { requiresAuth: true },
     },
     {
-      path: '/about',
-      name: 'about',
+      path: '/ai',
+      name: 'ai',
       component: AIView,
       meta: { requiresAuth: true },
     },
@@ -32,25 +31,21 @@ const router = createRouter({
       path: '/home',
       name: 'Home',
       component: HomeView,
-      meta: { requiresAuth: true },
     },
     {
-      path: '/demo',
-      name: 'Demo',
-      component: DemoView,
-      meta: { requiresAuth: true },
+      path: '/calculator',
+      name: 'Calculator',
+      component: CalculatorView,
     },
     {
-      path: '/demo2',
-      name: 'Demo2',
-      component: DemoView2,
-      meta: { requiresAuth: true },
+      path: '/data-table',
+      name: 'Data Table',
+      component: DataTableView,
     },
     {
       path: '/test',
       name: 'Test',
       component: TestView,
-      meta: { requiresAuth: true },
     },
   ],
 })

@@ -62,7 +62,6 @@
 
 .input-container {
   display: flex;
-  padding: 1rem;
   background-color: white;
   border-top: 1px solid #eaeaea;
   gap: 0.5rem;

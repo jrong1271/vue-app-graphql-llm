@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import { isRef, ref, unref } from 'vue'
-import DeleteTable from './DeleteTable.vue'
+import DeleteTable from '@/components/DeleteTable.vue'
 
 const data = ref([
   {

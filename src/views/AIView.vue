@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 import AIAssistant from '../components/AIAssistant.vue'
-// No additional logic needed for this simple view
 </script>
 
 <style scoped>
