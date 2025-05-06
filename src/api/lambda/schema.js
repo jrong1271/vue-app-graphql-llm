@@ -1,5 +1,5 @@
 // schema.js
-const { gql } = require('graphql-tag');
+import { gql } from 'graphql-tag'
 
 const typeDefs = gql`
   type UserProduct {
@@ -11,22 +11,16 @@ const typeDefs = gql`
     user: User
     product: Product
   }
-  
   type User {
     id: ID!
     name: String!
     email: String!
   }
-  
+
   type Product {
     id: ID!
     name: String!
     price: Float!
-  }
-
-  type AuthPayload {
-    token: String!
-    user: User!
   }
 
   type Query {
@@ -36,7 +30,6 @@ const typeDefs = gql`
     product(id: ID!): Product
     userProducts: [UserProduct]
     userProduct(id: ID!): UserProduct
-    # login moved to mutation
   }
 
   type Mutation {
@@ -44,6 +37,11 @@ const typeDefs = gql`
     addUser(name: String!, email: String!, password: String!): User
     updatePassword(userId: ID!, currentPassword: String!, newPassword: String!): User
   }
-`;
 
-module.exports = typeDefs;
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+`
+
+export default typeDefs
