@@ -1,0 +1,61 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: smeeta
+service: graphql-api
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  architecture: arm64
+  vpc:
+    securityGroupIds:
+      - sg-0453bff0fa3d41e0c  # Replace with your security group ID
+    subnetIds:
+      - subnet-02470d15fc034c587  # Replace with your subnet IDs
+      - subnet-07830476744fee2cf  # Include at least two subnets in different AZs
+  memorySize: 512
+  timeout: 29
+  logRetentionInDays: 14
+  environment:
+    NODE_ENV: production
+    PG_HOST: ${env:PG_HOST}
+    PG_USER: ${env:PG_USER}
+    PG_PASSWORD: ${env:PG_PASSWORD}
+    PG_DB: ${env:PG_DB}
+    PG_PORT: 5432
+    PG_SSL: 'true'
+    JWT_SECRET: ${env:JWT_SECRET, 'default-dev-secret-change-in-production'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource: arn:aws:logs:*:*:*
+        - Effect: Allow
+          Action:
+            - ec2:CreateNetworkInterface
+            - ec2:DescribeNetworkInterfaces
+            - ec2:DeleteNetworkInterface
+          Resource: "*"
+functions:
+  graphql:
+    handler: lambda.handler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true
+
+package:
+  include:
+    - lambda.js
+    - schema.js
+    - resolvers.js
+    - db.js
+    - node_modules/**
