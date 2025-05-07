@@ -1,10 +1,16 @@
 /* Existing styles remain below */
 
 #app {
-  max-width: 1280px;
+  min-width: 680px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
+  place-items: center;
+  border: 1px solid #eee;
+}
+.content-container {
+  padding: 20px;
+  margin: 0 auto;
   place-items: center;
 }
 @media (min-width: 1024px) {
@@ -23,9 +29,40 @@ a,
 li {
   list-style: none;
 }
-
+.btn {
+  color: white;
+  padding: 0.2em;
+  margin: 1em;
+  background-color: #27bfdc;
+  border-radius: 02em;
+}
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
+}
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-family:
+    'Helvetica Neue',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    sans-serif;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

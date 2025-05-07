@@ -6,6 +6,7 @@ import CalculatorView from '../views/CalculatorView.vue'
 import DataTableView from '../views/DataTableView.vue'
 import TestView from '../views/TestView.vue'
 import { useAuthStore } from '../stores/auth'
+import ToDoView from '../views/ToDoView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +14,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'Root',
-      redirect: '/home',
+      component: HomeView,
+    },
+    {
+      path: '/todo',
+      name: 'todo',
+      component: ToDoView,
     },
     {
       path: '/ai',
@@ -26,11 +32,6 @@ const router = createRouter({
       name: 'Login',
       component: LoginView,
       meta: { requiresAuth: false },
-    },
-    {
-      path: '/home',
-      name: 'Home',
-      component: HomeView,
     },
     {
       path: '/calculator',

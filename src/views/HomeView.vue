@@ -19,8 +19,11 @@
 <style scoped>
 .home {
   padding: 2rem;
-  font-family: Arial, sans-serif;
   line-height: 1.6;
+  width: 500px;
+  background-color: #f9f9f9;
+  border-radius: 1em;
+  min-height: 400px;
 }
 
 h1,

@@ -145,7 +145,7 @@ async function sendMessage() {
         :class="['message', message.role === 'user' ? 'user-message' : 'assistant-message']"
       >
         <div class="message-header">
-          <strong>{{ message.role === 'user' ? 'You' : 'Assistant' }}</strong>
+          <strong>{{ message.role === 'user' ? 'You' : 'ChatGPT' }}</strong>
         </div>
         <div class="message-content">{{ message.content }}</div>
       </div>

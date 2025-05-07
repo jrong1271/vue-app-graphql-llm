@@ -1,5 +1,5 @@
 <template>
-  <v-container class="about">
+  <v-container>
     <AIAssistant />
   </v-container>
 </template>
@@ -8,8 +8,4 @@
 import AIAssistant from '../components/AIAssistant.vue'
 </script>
 
-<style scoped>
-.about {
-  text-align: center;
-}
-</style>
+<style scoped></style>

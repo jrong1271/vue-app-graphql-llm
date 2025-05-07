@@ -19,8 +19,9 @@ const logout = () => {
         <li><router-link to="/ai">Ai Bot</router-link></li>
         <li><router-link to="/test">Test</router-link></li>
         <li class="dropdown">
-          <a href="#">Application Demo</a>
+          <a href="#">Apps</a>
           <ul class="dropdown-menu">
+            <li><router-link to="/todo">To Do List</router-link></li>
             <li><router-link to="/calculator">Calculator</router-link></li>
             <li><router-link to="/data-table">Data Table</router-link></li>
           </ul>

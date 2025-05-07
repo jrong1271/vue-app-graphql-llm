@@ -44,13 +44,12 @@ function onClickButton(value: string) {
     equation.value = value
     answer.value = ''
     calculationDone.value = false
-  } 
+  }
   // If we just completed a calculation and press an operator, continue with the result
   else if (calculationDone.value && isOperator(value)) {
     equation.value = answer.value + value
     calculationDone.value = false
-  }
-  else {
+  } else {
     equation.value += value
   }
 }
@@ -63,13 +62,13 @@ function onSubmit() {
   try {
     // Store the equation for display
     const currentEquation = equation.value
-    
+
     // Use a safer approach than eval
     const result = calculateResult(equation.value)
-    
+
     // Update the answer and equation display
     answer.value = result.toString()
-    
+
     // Set flag that calculation is done
     calculationDone.value = true
   } catch (error) {
@@ -80,47 +79,47 @@ function onSubmit() {
 function calculateResult(expr: string): number {
   // Handle basic operations with proper operator precedence
   // This is a simple implementation - for a real calculator, consider using a proper expression parser
-  
+
   // Replace all occurrences of % with /100
   expr = expr.replace(/%/g, '/100')
-  
+
   // First, handle multiplication and division
-  let tokens = tokenize(expr)
+  const tokens = tokenize(expr)
   let i = 1
   while (i < tokens.length - 1) {
     if (tokens[i] === '*' || tokens[i] === '/') {
-      const left = parseFloat(tokens[i-1])
-      const right = parseFloat(tokens[i+1])
+      const left = parseFloat(tokens[i - 1])
+      const right = parseFloat(tokens[i + 1])
       let result
-      
+
       if (tokens[i] === '*') {
         result = left * right
       } else {
         if (right === 0) throw new Error('Division by zero')
         result = left / right
       }
-      
+
       // Replace the operation and operands with the result
-      tokens.splice(i-1, 3, result.toString())
+      tokens.splice(i - 1, 3, result.toString())
       i = 1 // Reset to check from beginning
     } else {
       i += 2
     }
   }
-  
+
   // Then handle addition and subtraction
   let result = parseFloat(tokens[0])
   for (i = 1; i < tokens.length; i += 2) {
     const operator = tokens[i]
-    const operand = parseFloat(tokens[i+1])
-    
+    const operand = parseFloat(tokens[i + 1])
+
     if (operator === '+') {
       result += operand
     } else if (operator === '-') {
       result -= operand
     }
   }
-  
+
   return result
 }
 
@@ -128,10 +127,10 @@ function tokenize(expr: string): string[] {
   // Convert expression string to tokens (numbers and operators)
   const tokens = []
   let currentNumber = ''
-  
+
   for (let i = 0; i < expr.length; i++) {
     const char = expr[i]
-    
+
     if (isOperator(char)) {
       if (currentNumber) {
         tokens.push(currentNumber)
@@ -142,11 +141,11 @@ function tokenize(expr: string): string[] {
       currentNumber += char
     }
   }
-  
+
   if (currentNumber) {
     tokens.push(currentNumber)
   }
-  
+
   return tokens
 }
 
@@ -156,12 +155,12 @@ function onPlusMinusModeSwitch() {
     equation.value = '-'
     return
   }
-  
+
   // Find the last number in the equation
   const tokens = tokenize(equation.value)
   if (tokens.length > 0) {
     const lastToken = tokens[tokens.length - 1]
-    
+
     // If the last token is a number
     if (!isOperator(lastToken)) {
       if (lastToken.startsWith('-')) {
@@ -171,7 +170,7 @@ function onPlusMinusModeSwitch() {
         // Add a negative sign
         tokens[tokens.length - 1] = '-' + lastToken
       }
-      
+
       // Reconstruct the equation
       equation.value = tokens.join('')
     } else {
