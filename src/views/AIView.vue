@@ -1,7 +1,5 @@
 <template>
-  <v-container>
-    <AIAssistant />
-  </v-container>
+  <AIAssistant />
 </template>
 
 <script setup lang="ts">

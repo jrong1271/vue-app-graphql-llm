@@ -3,6 +3,18 @@ import { ref, onMounted, watch, nextTick } from 'vue'
 import axios from 'axios'
 import './AiAssistant.css'
 
+type ChatCompletionResponse = {
+  id: string
+  object: string
+  created: number
+  model: string
+  choices: Array<{
+    index: number
+    message: { role: string; content: string }
+    finish_reason: string
+  }>
+}
+
 // State
 const userInput = ref('')
 const messages = ref<Array<{ role: string; content: string }>>([])
@@ -39,7 +51,9 @@ watch(
 )
 
 // Simplified API request function
-async function makeApiRequest(messages: Array<{ role: string; content: string }>): Promise<any> {
+async function makeApiRequest(
+  messages: Array<{ role: string; content: string }>,
+): Promise<ChatCompletionResponse> {
   try {
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
@@ -58,7 +72,7 @@ async function makeApiRequest(messages: Array<{ role: string; content: string }>
       },
     )
     return response.data
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in makeApiRequest:', error)
     throw new Error('Failed to communicate with the API.')
   }
@@ -123,8 +137,12 @@ async function sendMessage() {
         const systemMessage = conversationHistory.value[0]
         conversationHistory.value = [systemMessage, ...conversationHistory.value.slice(-9)]
       }
-    } catch (error: any) {
-      errorMessage.value = error.message || 'An error occurred while processing your request.'
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error in sendMessage:', error)
+      } else {
+        console.error('Unknown error in sendMessage:', error)
+      }
       messages.value.push({
         role: 'assistant',
         content: 'Sorry, there was an error processing your request. Please try again later.',

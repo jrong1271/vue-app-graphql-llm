@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "run-p vite lambda",
-    "vite": "vite",
-    "lambda": "node src/api/lambda/index.js",
+    "vite": "NODE_ENV=development vite",
+    "lambda": "NODE_ENV=development node src/api/lambda/index.js",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
