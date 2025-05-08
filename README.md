@@ -1,31 +1,37 @@
-# Finance Vue App
+# Modern Vue App
 
-A modern Vue 3 application showcasing various features and integrations.
+A modern Vue 3 application showcasing various features and LLC integration like google and chatGPT. Utilize graphQL to simplify the development process.
 
 ## Features
 
 ### Todo List Management
+
 - Add, complete, and delete todos
-- Persistent storage using localStorage
+- Persistent storage using GraphQL backend
 - Visual feedback:
   - Hover effects for delete actions
   - Strikethrough effect for completed items
   - Clean, minimal UI with icons
+- Checked items are displayed at the bottom of the list
+- Real-time updates using Apollo Client
 
 ### AI Assistant Integration
+
 - Interactive chat interface
 - Real-time conversation
 - Loading indicators for responses
 - Error handling and feedback
 
 ### Navigation
+
 - Responsive menu system
 - Dropdown support for nested navigation
 - Application demo section with:
   - Calculator
-  - Data Table
+  - Data Table (I'm planning on adding data grid here)
 
 ### Authentication
+
 - Secure login system
 - Password visibility toggle
 - Loading states during authentication
@@ -46,29 +52,6 @@ npm run dev
 # - Vue app on port 5173
 # - Lambda functions on port 4000
 ```
-
-### API Configuration
-
-1. **Remote API (Default)**
-   - Uses `https://0isr0jxbc8.execute-api.us-east-1.amazonaws.com/dev/`
-
-2. **Local Development**
-   ```bash
-   # Create .env.local file
-   echo "API_LOCAL=true" > .env.local
-   
-   # Start the development server
-   npm run dev
-   ```
-
-3. **Switch to Remote API**
-   ```bash
-   # Either modify .env.local
-   echo "API_LOCAL=false" > .env.local
-   
-   # Or remove .env.local entirely
-   rm .env.local
-   ```
 
 ## Project Structure
 
@@ -98,12 +81,7 @@ src/
 # Start development servers (frontend + lambda)
 npm run dev
 
-# Build for production
+# Build for production (need to work out the build script)
 npm run build
 
-# Run linting
-npm run lint
-
-# Format code
-npm run format
 ```
