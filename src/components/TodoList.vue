@@ -57,6 +57,19 @@ function handleChange(id: string, checked: boolean) {
   const todo = todos.value.find((todo: Todo) => todo.id === id)
   if (todo) {
     todo.checked = checked
+
+    // Remove the todo from its current position
+    const index = todos.value.findIndex((t: Todo) => t.id === id)
+    if (index !== -1) {
+      const [movedTodo] = todos.value.splice(index, 1)
+
+      // Add it to the end if checked, otherwise to the beginning
+      if (checked) {
+        todos.value.push(movedTodo)
+      } else {
+        todos.value.unshift(movedTodo)
+      }
+    }
   }
 }
 function handleDelete(id: string) {

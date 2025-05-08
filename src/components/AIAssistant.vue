@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, nextTick } from 'vue'
 import axios from 'axios'
+import { marked } from 'marked'
+import sanitizeHtml from 'sanitize-html'
 import './AiAssistant.css'
 
-type ChatCompletionResponse = {
-  id: string
-  object: string
-  created: number
-  model: string
-  choices: Array<{
-    index: number
-    message: { role: string; content: string }
-    finish_reason: string
+// Update the type definition for Gemini's response format
+type GeminiResponse = {
+  candidates: Array<{
+    content: {
+      parts: Array<{
+        text: string
+      }>
+    }
+    finishReason: string
   }>
 }
 
 // State
 const userInput = ref('')
-const messages = ref<Array<{ role: string; content: string }>>([])
+const messages = ref<Array<{ role: string; content: string; isHtml?: boolean }>>([])
 const conversationHistory = ref<Array<{ role: string; content: string }>>([
   { role: 'system', content: 'You are a helpful assistant.' },
 ])
 const isLoading = ref(false)
 const errorMessage = ref('')
-const apiKey = ref(import.meta.env.VITE_OPENAI_API_KEY || '')
+const apiKey = ref(import.meta.env.VITE_GEMINI_API_KEY || '')
 const messagesContainer = ref<HTMLElement | null>(null)
 
 // Queue and rate-limiting state
@@ -50,23 +52,31 @@ watch(
   },
 )
 
-// Simplified API request function
+// Update the API request function
 async function makeApiRequest(
   messages: Array<{ role: string; content: string }>,
-): Promise<ChatCompletionResponse> {
+): Promise<GeminiResponse> {
   try {
+    // Convert conversation history to Gemini format
+    const content = {
+      contents: [
+        {
+          parts: [
+            {
+              text: messages[messages.length - 1].content,
+            },
+          ],
+        },
+      ],
+    }
+
     const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-3.5-turbo',
-        messages,
-        temperature: 0.7,
-        max_tokens: 500,
-      },
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+      content,
       {
         headers: {
-          Authorization: `Bearer ${apiKey.value}`,
           'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey.value,
         },
         timeout: 30000,
       },
@@ -74,7 +84,7 @@ async function makeApiRequest(
     return response.data
   } catch (error: unknown) {
     console.error('Error in makeApiRequest:', error)
-    throw new Error('Failed to communicate with the API.')
+    throw new Error('Failed to communicate with the Gemini API.')
   }
 }
 
@@ -102,7 +112,39 @@ function queueRequest(requestFn: () => Promise<void>) {
   processQueue()
 }
 
-// Send a message
+// Add a function to format the response
+function formatResponse(text: string): string {
+  // Parse markdown and sanitize HTML
+  const sanitizedHtml = sanitizeHtml(marked.parse(text), {
+    allowedTags: [
+      'b',
+      'i',
+      'em',
+      'strong',
+      'a',
+      'p',
+      'ul',
+      'ol',
+      'li',
+      'code',
+      'pre',
+      'blockquote',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'br',
+    ],
+    allowedAttributes: {
+      a: ['href', 'target', 'rel'],
+    },
+  })
+  return sanitizedHtml
+}
+
+// Update the sendMessage function
 async function sendMessage() {
   if (!userInput.value.trim()) return
   if (!apiKey.value) {
@@ -125,12 +167,21 @@ async function sendMessage() {
   queueRequest(async () => {
     try {
       const response = await makeApiRequest(conversationHistory.value)
-      const assistantMessage =
-        response.choices[0]?.message?.content || 'No response from assistant.'
+      const rawMessage =
+        response.candidates[0]?.content?.parts[0]?.text || 'No response from assistant.'
 
-      // Add assistant response to UI and conversation history
-      messages.value.push({ role: 'assistant', content: assistantMessage })
-      conversationHistory.value.push({ role: 'assistant', content: assistantMessage })
+      // Format the response before adding it to messages
+      const formattedMessage = formatResponse(rawMessage)
+
+      messages.value.push({
+        role: 'assistant',
+        content: formattedMessage,
+        isHtml: true, // Add this flag to identify formatted messages
+      })
+      conversationHistory.value.push({
+        role: 'assistant',
+        content: rawMessage, // Keep original text in conversation history
+      })
 
       // Trim conversation history to avoid token limits
       if (conversationHistory.value.length > 10) {
@@ -163,9 +214,10 @@ async function sendMessage() {
         :class="['message', message.role === 'user' ? 'user-message' : 'assistant-message']"
       >
         <div class="message-header">
-          <strong>{{ message.role === 'user' ? 'You' : 'ChatGPT' }}</strong>
+          <strong>{{ message.role === 'user' ? 'You' : 'Gemini' }}</strong>
         </div>
-        <div class="message-content">{{ message.content }}</div>
+        <div class="message-content" v-if="message.isHtml" v-html="message.content"></div>
+        <div class="message-content" v-else>{{ message.content }}</div>
       </div>
       <div v-if="isLoading" class="message assistant-message loading">
         <div class="typing-indicator">
@@ -195,3 +247,48 @@ async function sendMessage() {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Add these styles for formatted content */
+:deep(.message-content) {
+  code {
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+
+  pre {
+    background-color: #f4f4f4;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  ul,
+  ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  blockquote {
+    border-left: 4px solid #ddd;
+    margin: 0.5rem 0;
+    padding-left: 1rem;
+    color: #666;
+  }
+
+  a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}
+</style>

@@ -1,46 +1,20 @@
-<template>
-  <DeleteTable :table-data="data" @update:table-data="updateData" />
-</template>
-
-<script lang="ts" setup>
-import { isRef, ref, unref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import DeleteTable from '@/components/DeleteTable.vue'
+import { sampleTableData } from '@/data/sampleTableData.ts'
 
-const data = ref([
-  {
-    name: 'Tom',
-    age: 22,
-  },
-  {
-    name: 'Jerry',
-    age: 20,
-  },
-  {
-    name: 'Jack',
-    age: 26,
-  },
-  {
-    name: 'Rose',
-    age: 23,
-  },
-  {
-    name: 'Bob',
-    age: 30,
-  },
-  {
-    name: 'Mike',
-    age: 27,
-  },
-])
-const isWrong = ref(false)
-
-function updateData(newVal) {
-  if (isRef(newVal)) {
-    isWrong.value = true
-  } else {
-    data.value = unref(newVal)
-  }
-}
+const tableData = ref([...sampleTableData])
 </script>
 
-<style scoped></style>
+<template>
+  <div class="table-view">
+    <h1>Data Table Example</h1>
+    <DeleteTable v-model:tableData="tableData" />
+  </div>
+</template>
+
+<style scoped>
+.table-view {
+  padding: 2rem;
+}
+</style>
