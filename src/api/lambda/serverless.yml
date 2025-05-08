@@ -8,10 +8,10 @@ provider:
   architecture: arm64
   vpc:
     securityGroupIds:
-      - sg-0453bff0fa3d41e0c  # Replace with your security group ID
+      - ${env:SecurityGroupIds} # Replace with your security group ID
     subnetIds:
-      - subnet-02470d15fc034c587  # Replace with your subnet IDs
-      - subnet-07830476744fee2cf  # Include at least two subnets in different AZs
+      - ${env:SubnetIds} # Replace with your subnet IDs
+      - ${env:SubnetIds2} # Include at least two subnets in different AZs
   memorySize: 512
   timeout: 29
   logRetentionInDays: 14
@@ -38,7 +38,7 @@ provider:
             - ec2:CreateNetworkInterface
             - ec2:DescribeNetworkInterfaces
             - ec2:DeleteNetworkInterface
-          Resource: "*"
+          Resource: '*'
 functions:
   graphql:
     handler: lambda.handler

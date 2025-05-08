@@ -1,6 +1,7 @@
 # Modern Vue App
 
 A modern Vue 3 application showcasing various features and LLC integration like google and chatGPT. Utilize graphQL to simplify the development process.
+![App Screenshot](./image.png)
 
 ## Features
 
