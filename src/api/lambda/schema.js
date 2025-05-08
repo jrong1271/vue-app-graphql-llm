@@ -2,6 +2,13 @@
 import { gql } from 'graphql-tag'
 
 const typeDefs = gql`
+  type Todo {
+    id: ID!
+    label: String!
+    checked: Boolean!
+    created_at: String!
+    updated_at: String!
+  }
   type UserProduct {
     id: ID!
     userId: Int
@@ -24,6 +31,8 @@ const typeDefs = gql`
   }
 
   type Query {
+    todos: [Todo!]!
+    todo(id: ID!): Todo
     users: [User]
     user(id: ID!): User
     products: [Product]
@@ -33,6 +42,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    addTodo(label: String!): Todo!
+    updateTodo(id: ID!, checked: Boolean!): Todo!
+    deleteTodo(id: ID!): Todo!
     login(email: String!, password: String!): AuthPayload
     addUser(name: String!, email: String!, password: String!): User
     updatePassword(userId: ID!, currentPassword: String!, newPassword: String!): User

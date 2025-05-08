@@ -7,10 +7,10 @@ console.log('Current route:', route.path)
 
 const arr = [1, 2, 3, 4, 5]
 onBeforeMount(() => {
-  console.log(1)
+  console.log('Before mount')
 })
 onMounted(() => {
-  console.log(2)
+  console.log('Mounted')
 })
 function getSum2() {
   let i = 0

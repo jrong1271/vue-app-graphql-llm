@@ -2,7 +2,7 @@
 import { ref, onMounted, watch, nextTick } from 'vue'
 import axios from 'axios'
 import { marked } from 'marked'
-import sanitizeHtml from 'sanitize-html'
+import DOMPurify from 'dompurify'
 import './AiAssistant.css'
 
 // Update the type definition for Gemini's response format
@@ -113,33 +113,11 @@ function queueRequest(requestFn: () => Promise<void>) {
 }
 
 // Add a function to format the response
-function formatResponse(text: string): string {
+async function formatResponse(text: string): Promise<string> {
   // Parse markdown and sanitize HTML
-  const sanitizedHtml = sanitizeHtml(marked.parse(text), {
-    allowedTags: [
-      'b',
-      'i',
-      'em',
-      'strong',
-      'a',
-      'p',
-      'ul',
-      'ol',
-      'li',
-      'code',
-      'pre',
-      'blockquote',
-      'h1',
-      'h2',
-      'h3',
-      'h4',
-      'h5',
-      'h6',
-      'br',
-    ],
-    allowedAttributes: {
-      a: ['href', 'target', 'rel'],
-    },
+  const sanitizedHtml = DOMPurify.sanitize(marked.parse(text), {
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li'],
+    ALLOWED_ATTR: ['href', 'target'],
   })
   return sanitizedHtml
 }
@@ -171,7 +149,7 @@ async function sendMessage() {
         response.candidates[0]?.content?.parts[0]?.text || 'No response from assistant.'
 
       // Format the response before adding it to messages
-      const formattedMessage = formatResponse(rawMessage)
+      const formattedMessage = await formatResponse(rawMessage)
 
       messages.value.push({
         role: 'assistant',

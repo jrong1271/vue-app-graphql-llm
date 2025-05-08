@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import AIView from '../views/AIView.vue'
 import CalculatorView from '../views/CalculatorView.vue'
 import DataTableView from '../views/DataTableView.vue'
 import TestView from '../views/TestView.vue'
-import { useAuthStore } from '../stores/auth'
 import ToDoView from '../views/ToDoView.vue'
 
 const router = createRouter({

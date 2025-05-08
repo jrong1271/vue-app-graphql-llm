@@ -4,7 +4,7 @@ import Todo from '@/components/TodoList.vue'
 
 <template>
   <div class="todo-container">
-    <h1>My ToDo</h1>
+    <h1>Task List</h1>
     <Todo />
   </div>
 </template>

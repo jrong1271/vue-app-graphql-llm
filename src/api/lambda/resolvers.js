@@ -8,6 +8,16 @@ const JWT_SECRET = process.env.JWT_SECRET || ''
 
 const resolvers = {
   Query: {
+    // Fetch all todos
+    todos: async () => {
+      const result = await query('SELECT * FROM todos ORDER BY created_at ASC')
+      return result.rows
+    },
+    // Fetch a single todo by ID
+    todo: async (_, { id }) => {
+      const result = await query('SELECT * FROM todos WHERE id = $1', [id])
+      return result.rows[0]
+    },
     users: async () => {
       const result = await query('SELECT * FROM public."Users"')
       return result.rows
@@ -44,6 +54,27 @@ const resolvers = {
     },
   },
   Mutation: {
+    // Add a new todo
+    addTodo: async (_, { label }) => {
+      const result = await query(
+        'INSERT INTO todos (label, checked, created_at, updated_at) VALUES ($1, FALSE, NOW(), NOW()) RETURNING *',
+        [label],
+      )
+      return result.rows[0]
+    },
+    // Update a todo's checked status
+    updateTodo: async (_, { id, checked }) => {
+      const result = await query(
+        'UPDATE todos SET checked = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
+        [checked, id],
+      )
+      return result.rows[0]
+    },
+    // Delete a todo
+    deleteTodo: async (_, { id }) => {
+      const result = await query('DELETE FROM todos WHERE id = $1 RETURNING *', [id])
+      return result.rows[0]
+    },
     login: async (_, { email, password }) => {
       const result = await query('SELECT * FROM public."Users" WHERE email = $1', [email])
 
